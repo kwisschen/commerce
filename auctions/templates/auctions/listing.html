@@ -1,0 +1,57 @@
+{% extends "auctions/layout.html" %}
+{% load tz %}
+
+{% block body %}
+
+    <div class="container">
+        {% if user.is_authenticated %}
+            {% if watchlisted %}
+                <form action="{% url 'unwatch' id=listing.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Unwatch</button>
+                </form>
+            {% else %}
+            <form action="{% url 'watch' id=listing.id %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success">Watchlist</button>
+            </form>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <div class="container">
+        <h2>Influencer: {{ listing.name }}</h2>
+        <img src="{{ listing.image_url }}" class="center" height="350 px" alt="{{ listing.name }}">
+        <p>{{ listing.description }}</p>
+        <h5>Pricing: ${{ listing.price }}
+    </div>
+    <div class="container">
+        <p>Posted by: {{ listing.posted_by }}</p>
+    </div>
+    <div class="container">
+        <h2>Comments</h2>
+        <div>
+            {% if user.is_authenticated %}
+            <form action="{% url 'comment' id=listing.id %}" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="description">Share experience: </label>
+                    <input type="text" name="new_comment" placeholder="comment here">
+                    <button type="submit" class="btn btn-warning">Post</button>
+                </div>
+            </form>
+            {% endif %}
+        </div>
+        <div>
+            <ul class="list-group">
+            {% for comment in comments %}
+                <li class="list-group-item">
+                    <strong>{{ comment.author }}</strong><br>
+                    {{ comment.message }}<br>
+                    <small><em>{{ comment.timestamp|localtime }}</em></small>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}
