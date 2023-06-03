@@ -21,13 +21,13 @@ class Bid(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="user_bids")
 
     def __str__(self):
-        return self.bid
+        return str(self.bid)
 
 
 class Listing(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=1000)
-    price = models.ForeignKey(Bid, on_delete=models.CASCADE, blank=True, null=True, related_name="listing_bid")
+    price = models.ForeignKey(Bid, on_delete=models.CASCADE, blank=True, null=True, related_name="listing_bid", default=Bid.objects.create)
     is_active = models.BooleanField(default=True)
     image_url = models.CharField(max_length=1000)
     poster = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="posted_listings")
@@ -36,6 +36,7 @@ class Listing(models.Model):
 
     def __str__(self):
         return self.name
+
 
 
 class Comment(models.Model):

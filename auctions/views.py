@@ -3,6 +3,8 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from decimal import Decimal
+from django.shortcuts import get_object_or_404
 
 from .models import User, Category, Listing, Comment, Bid
 
@@ -34,11 +36,12 @@ def listing(request, id):
     listing_data = Listing.objects.get(pk=id)
     watchlisted = request.user in listing_data.watched_by.all()
     listing_comments = Comment.objects.filter(listing=listing_data) # grabs 'listing' field from model of current listing
-
+    is_poster = request.user.username == listing_data.poster.username
     return render(request, "auctions/listing.html", {
         "listing": listing_data,
         "watchlisted": watchlisted,
-        "comments": listing_comments
+        "comments": listing_comments,
+        "poster": is_poster
     })
 
 
@@ -65,45 +68,38 @@ def unwatch(request, id):
     return HttpResponseRedirect(reverse("listing", args=(id, )))
 
 
+
 def bid(request, id):
-    new_bid = request.POST["new_bid"]
-    listing_data = Listing.objects.get(pk=id)
+    new_bid = request.POST.get("new_bid")
+    listing_data = get_object_or_404(Listing, pk=id)
     watchlisted = request.user in listing_data.watched_by.all()
     listing_comments = Comment.objects.filter(listing=listing_data)
-    if new_bid > listing_data.price.bid:
-        latest_bid = Bid(bid=new_bid, user=request.user)
-        latest_bid.save()
-        listing_data.price = latest_bid
-        listing_data.save()
-        return render(request, "auctions/listing.html", {
-            "listing": listing_data,
-            "message": "Your bid has been placed successfully",
-            "updated": True,
-            "watchlisted": watchlisted,
-            "comments": listing_comments
-        })
-    else:
-        return render(request, "auctions/listing.html", {
-            "listing": listing_data,
-            "message": "Your bid is lower than the current bid",
-            "updated": False,
-            "watchlisted": watchlisted,
-            "comments": listing_comments
-        })
+    is_poster = request.user.username == listing_data.poster.username
 
+    if new_bid:
+        new_bid_value = Decimal(new_bid)
+        if listing_data.price is None or new_bid_value > listing_data.price.bid:
+            latest_bid = Bid.objects.create(bid=new_bid_value, user=request.user)
+            listing_data.price = latest_bid
+            listing_data.save()
+            return render(request, "auctions/listing.html", {
+                "listing": listing_data,
+                "message": "Your bid has been placed successfully!",
+                "updated": True,
+                "poster": is_poster,
+                "watchlisted": watchlisted,
+                "comments": listing_comments
+            })
 
-def comment(request, id):
-    current_user = request.user
-    listing_data = Listing.objects.get(pk=id)
-    message = request.POST["new_comment"]
+    return render(request, "auctions/listing.html", {
+        "listing": listing_data,
+        "message": "Your bid is lower than the current bid.",
+        "updated": False,
+        "poster": is_poster,
+        "watchlisted": watchlisted,
+        "comments": listing_comments
+    })
 
-    new_comment = Comment(
-        author = current_user,
-        listing = listing_data,
-        message = message
-    )
-    new_comment.save()
-    return HttpResponseRedirect(reverse("listing", args=(id, )))
 
 def create_listing(request):
     if request.method == "GET":
@@ -142,6 +138,35 @@ def create_listing(request):
         return HttpResponseRedirect(reverse('index'))
 
 
+def comment(request, id):
+    current_user = request.user
+    listing_data = Listing.objects.get(pk=id)
+    message = request.POST["new_comment"]
+
+    new_comment = Comment(
+        author = current_user,
+        listing = listing_data,
+        message = message
+    )
+    new_comment.save()
+    return HttpResponseRedirect(reverse("listing", args=(id, )))
+
+
+def close_auction(request, id):
+    listing_data = Listing.objects.get(pk=id)
+    watchlisted = request.user in listing_data.watched_by.all()
+    listing_comments = Comment.objects.filter(listing=listing_data)
+    is_poster = request.user.username == listing_data.poster.username
+    listing_data.is_active = False
+    listing_data.save()
+    return render(request, "auctions/listing.html", {
+        "listing": listing_data,
+        "watchlisted": watchlisted,
+        "comments": listing_comments,
+        "poster": is_poster,
+        "updated": True,
+        "message": "Your auction has been closed successfully!"
+    })
 
 
 def login_view(request):

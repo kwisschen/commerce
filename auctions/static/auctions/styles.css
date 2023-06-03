@@ -1,31 +1,31 @@
 body {
     padding: 10px;
-}
-
-.upper-body {
+  }
+  
+  .upper-body {
     padding: 20px;
     background-color: #d7e3fc;
-}
-
-.main-body {
+  }
+  
+  .main-body {
     padding: 20px;
     background-color: #edf2fb;
-}
-
-.nav {
+  }
+  
+  .nav {
     font-size: 20px;
     justify-content: flex-end;
-}
-
-.center {
+  }
+  
+  .center {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
-}
-
-
-.container .center {
+  }
+  
+  .container .center {
     max-width: 100%;
     max-height: 100%;
-}
+  }
+  
