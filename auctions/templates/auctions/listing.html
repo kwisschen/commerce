@@ -2,7 +2,18 @@
 {% load tz %}
 
 {% block body %}
-
+    <div class="container">
+        {% if message %}
+            {% if updated %}
+            <div class="alert alert-success" role="alert">
+                {{ message }}
+            </div>
+            {% else %}
+            <div class="alert alert-danger" role="alert">
+                {{ message }}
+            {% endif %}
+        {% endif %}
+    </div>
     <div class="container">
         {% if user.is_authenticated %}
             {% if watchlisted %}
@@ -23,11 +34,22 @@
         <h2>Influencer: {{ listing.name }}</h2>
         <img src="{{ listing.image_url }}" class="center" height="350 px" alt="{{ listing.name }}">
         <p>{{ listing.description }}</p>
-        <h5>Pricing: ${{ listing.price }}
-    </div>
-    <div class="container">
+        <h5>Pricing: ${{ listing.price }}<br>
         <p>Posted by: {{ listing.posted_by }}</p>
     </div>
+    <div class="container">
+        <h5>Starting Bid: ${{ listing.price.bid }}</h5>
+        {% if user.is_authenticated %}
+        <form action="{% url 'bid' id=listing.id %}" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="new_bid">Share experience: </label>
+                <input type="text" name="new_bid" placeholder="place bid">
+                <button type="submit" class="btn btn-primary">Place</button>
+            </div>
+        </form>
+    </div>
+
     <div class="container">
         <h2>Comments</h2>
         <div>
@@ -35,8 +57,8 @@
             <form action="{% url 'comment' id=listing.id %}" method="POST">
                 {% csrf_token %}
                 <div class="form-group">
-                    <label for="description">Share experience: </label>
-                    <input type="text" name="new_comment" placeholder="comment here">
+                    <label for="new_comment">Share experience: </label>
+                    <input type="text" name="new_comment" placeholder="add comment">
                     <button type="submit" class="btn btn-warning">Post</button>
                 </div>
             </form>

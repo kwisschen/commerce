@@ -33,7 +33,6 @@ def by_category(request):
 def listing(request, id):
     listing_data = Listing.objects.get(pk=id)
     watchlisted = request.user in listing_data.watched_by.all()
-
     listing_comments = Comment.objects.filter(listing=listing_data) # grabs 'listing' field from model of current listing
 
     return render(request, "auctions/listing.html", {
@@ -64,6 +63,33 @@ def unwatch(request, id):
     listing_data = Listing.objects.get(pk=id)
     listing_data.watched_by.remove(current_user)
     return HttpResponseRedirect(reverse("listing", args=(id, )))
+
+
+def bid(request, id):
+    new_bid = request.POST["new_bid"]
+    listing_data = Listing.objects.get(pk=id)
+    watchlisted = request.user in listing_data.watched_by.all()
+    listing_comments = Comment.objects.filter(listing=listing_data)
+    if new_bid > listing_data.price.bid:
+        latest_bid = Bid(bid=new_bid, user=request.user)
+        latest_bid.save()
+        listing_data.price = latest_bid
+        listing_data.save()
+        return render(request, "auctions/listing.html", {
+            "listing": listing_data,
+            "message": "Your bid has been placed successfully",
+            "updated": True,
+            "watchlisted": watchlisted,
+            "comments": listing_comments
+        })
+    else:
+        return render(request, "auctions/listing.html", {
+            "listing": listing_data,
+            "message": "Your bid is lower than the current bid",
+            "updated": False,
+            "watchlisted": watchlisted,
+            "comments": listing_comments
+        })
 
 
 def comment(request, id):
