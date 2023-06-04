@@ -84,7 +84,7 @@ def bid(request, id):
             listing_data.save()
             return render(request, "auctions/listing.html", {
                 "listing": listing_data,
-                "message": "Your bid has been placed successfully!",
+                "message": "Your bid has been placed successfully",
                 "updated": True,
                 "poster": is_poster,
                 "watchlisted": watchlisted,
@@ -165,7 +165,7 @@ def close_auction(request, id):
         "comments": listing_comments,
         "poster": is_poster,
         "updated": True,
-        "message": "Your auction has been closed successfully!"
+        "message": "Your auction has been closed successfully"
     })
 
 

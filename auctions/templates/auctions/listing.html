@@ -6,7 +6,7 @@
         {% if message %}
             {% if updated %}
             <div class="alert alert-success" role="alert">
-                {{ message }}
+                {{ message }} by {{ listing.price.user }}
             </div>
             {% else %}
             <div class="alert alert-danger" role="alert">
@@ -14,34 +14,47 @@
             {% endif %}
         {% endif %}
     </div>
-    {% if not listing.is_active and user == listing.price.user %}
+    {% if user != listing.poster and not listing.is_active %}
     <div class="alert alert-success" role="alert">
         Congratulations! You have won the auction for a Power Hour with {{ listing.name }}!!
     </div>
     {% endif %}
 
     <div class="container">
-        {% if user.is_authenticated and listing.is_active %}
-            {% if poster %}
-            <div class="d-flex justify-content-start">
-                <form action="{% url 'close' id=listing.id %}" method="POST" class="mr-2">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Close Auction</button>
-                </form>
+        {% if user.is_authenticated %}
+            {% if user == listing.poster and listing.is_active %}
+                <div class="d-flex justify-content-start">
+                    <form action="{% url 'close' id=listing.id %}" method="POST" class="mr-2">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Close Auction</button>
+                    </form>
+                    {% if watchlisted %}
+                        <form action="{% url 'unwatch' id=listing.id %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-warning">Unwatch</button>
+                        </form>
+                    {% else %}
+                        <form action="{% url 'watch' id=listing.id %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success">Watchlist</button>
+                        </form>
+                    {% endif %}
+                </div>
+            {% else %}
                 {% if watchlisted %}
-                <form action="{% url 'unwatch' id=listing.id %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-warning">Unwatch</button>
-                </form>
+                    <form action="{% url 'unwatch' id=listing.id %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-warning">Unwatch</button>
+                    </form>
                 {% else %}
-                <form action="{% url 'watch' id=listing.id %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-success">Watchlist</button>
-                </form>
+                    <form action="{% url 'watch' id=listing.id %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success">Watchlist</button>
+                    </form>
                 {% endif %}
-            </div>
             {% endif %}
         {% endif %}
+
     </div>
     <div class="container">
         <h2>Influencer: {{ listing.name }}</h2>

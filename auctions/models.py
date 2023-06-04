@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
 from decimal import Decimal
+# from django import forms # for using the TextField model if necessary
 
 
 class User(AbstractUser):
@@ -26,7 +27,7 @@ class Bid(models.Model):
 
 class Listing(models.Model):
     name = models.CharField(max_length=50)
-    description = models.CharField(max_length=1000)
+    description = models.CharField(max_length=300)
     price = models.ForeignKey(Bid, on_delete=models.CASCADE, blank=True, null=True, related_name="listing_bid", default=Bid.objects.create)
     is_active = models.BooleanField(default=True)
     image_url = models.CharField(max_length=1000)
