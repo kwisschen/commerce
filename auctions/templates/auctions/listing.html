@@ -6,7 +6,7 @@
         {% if message %}
             {% if updated %}
             <div class="alert alert-success" role="alert">
-                {{ message }} by {{ listing.price.user }}
+                {{ listing.price.user }}, {{ message }}
             </div>
             {% else %}
             <div class="alert alert-danger" role="alert">
@@ -54,43 +54,57 @@
                 {% endif %}
             {% endif %}
         {% endif %}
+    </div>
 
-    </div>
     <div class="container">
-        <h2>Influencer: {{ listing.name }}</h2>
-        <img src="{{ listing.image_url }}" class="center" height="350 px" alt="{{ listing.name }}">
-        <br><p>{{ listing.description }}</p>
-        <h5>Pricing: ${{ listing.price }}<br>
-        <p>Posted by: {{ listing.posted_by }}</p>
-    </div>
+        <h2 class="mb-4">Influencer: {{ listing.name }}</h2>
+        <img src="{{ listing.image_url }}" class="center mb-4" height="350px" alt="{{ listing.name }}">
+        <p class="mb-4">{{ listing.description }}</p>
+        <h5>Pricing: ${{ listing.price }}</h5>
+        <p>Posted by: {{ listing.poster }}</p>
+      </div>
+
     <div class="container">
-        <h5>Current Bid: ${{ listing.price.bid }}</h5>
-        {% if user.is_authenticated %}
-        <form action="{% url 'bid' id=listing.id %}" method="POST">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="new_bid">Place your bid: </label>
-                <input type="text" name="new_bid" placeholder="Amount">
-                <button type="submit" class="btn btn-warning">Bid</button>
-            </div>
-        </form>
-        {% endif %}
+        <div class="bid-form">
+            <h5>Current Bid: ${{ listing.price.bid }}</h5>
+            {% if user.is_authenticated %}
+            <form action="{% url 'bid' id=listing.id %}" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="new_bid">Place your bid:</label>
+                    <div class="input-group">
+                        <input type="text" name="new_bid" class="form-control input-long" placeholder="Amount">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-warning">Bid</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            {% endif %}
+        </div>
     </div>
 
     <div class="container">
         <h3>Comments</h3>
         <div>
             {% if user.is_authenticated %}
-            <form action="{% url 'comment' id=listing.id %}" method="POST">
+            <form action="{% url 'comment' id=listing.id %}" method="POST" class="form-inline">
                 {% csrf_token %}
                 <div class="form-group">
-                    <label for="new_comment">Share your experience: </label>
-                    <input type="text" name="new_comment" placeholder="Comment">
-                    <button type="submit" class="btn btn-primary">Post</button>
+                    <label for="new_comment" class="form-label">Share your experience:</label>
+                    <div class="input-group">
+                        <input type="text" name="new_comment" placeholder="Comment" class="form-control input-short">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary">Post</button>
+                        </div>
+                    </div>
                 </div>
             </form>
             {% endif %}
         </div>
+    </div>
+
+    <div class="container">
         <div>
             <ul class="list-group">
             {% for comment in comments %}

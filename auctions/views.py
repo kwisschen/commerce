@@ -32,6 +32,43 @@ def by_category(request):
         })
 
 
+def create_listing(request):
+    if request.method == "GET":
+        all_categories = Category.objects.all()
+        return render(request, "auctions/create.html", {
+            "categories": all_categories,
+        })
+    elif request.method == "POST":
+        # get data from our form
+        name = request.POST["name"]
+        description = request.POST["description"] # from 'name' attr in input tag
+        price = request.POST["price"]
+        image_url = request.POST["imageurl"]
+        current_user = request.user
+        category = request.POST["category"]
+        # need to access entire record of data that can actually go into Category table
+        category_data = Category.objects.get(category_name=category)
+
+        # Create and save new Bid object
+        bid = Bid(
+            bid = price,
+            user= current_user
+        )
+        bid.save()
+
+        # Create and save new Listing object
+        new_listing = Listing(
+            name=name, # left-side vars are vars in Listing model, right-side vars are local
+            description=description,
+            price=bid,
+            image_url=image_url,
+            poster=current_user,
+            category=category_data
+        )
+        new_listing.save()
+        return HttpResponseRedirect(reverse('index'))
+
+
 def listing(request, id):
     listing_data = Listing.objects.get(pk=id)
     watchlisted = request.user in listing_data.watched_by.all()
@@ -84,7 +121,7 @@ def bid(request, id):
             listing_data.save()
             return render(request, "auctions/listing.html", {
                 "listing": listing_data,
-                "message": "Your bid has been placed successfully",
+                "message": "your bid has been successfully placed.",
                 "updated": True,
                 "poster": is_poster,
                 "watchlisted": watchlisted,
@@ -93,49 +130,12 @@ def bid(request, id):
 
     return render(request, "auctions/listing.html", {
         "listing": listing_data,
-        "message": "Your bid is lower than the current bid.",
+        "message": "Your bid should be greater than the current bid.",
         "updated": False,
         "poster": is_poster,
         "watchlisted": watchlisted,
         "comments": listing_comments
     })
-
-
-def create_listing(request):
-    if request.method == "GET":
-        all_categories = Category.objects.all()
-        return render(request, "auctions/create.html", {
-            "categories": all_categories,
-        })
-    elif request.method == "POST":
-        # get data from our form
-        name = request.POST["name"]
-        description = request.POST["description"] # from 'name' attr in input tag
-        price = request.POST["price"]
-        image_url = request.POST["imageurl"]
-        current_user = request.user
-        category = request.POST["category"]
-        # need to access entire record of data that can actually go into Category table
-        category_data = Category.objects.get(category_name=category)
-
-        # Create and save new Bid object
-        bid = Bid(
-            bid = price,
-            user= current_user
-        )
-        bid.save()
-
-        # Create and save new Listing object
-        new_listing = Listing(
-            name=name, # left-side vars are vars in Listing model, right-side vars are local
-            description=description,
-            price=bid,
-            image_url=image_url,
-            poster=current_user,
-            category=category_data
-        )
-        new_listing.save()
-        return HttpResponseRedirect(reverse('index'))
 
 
 def comment(request, id):
@@ -165,7 +165,7 @@ def close_auction(request, id):
         "comments": listing_comments,
         "poster": is_poster,
         "updated": True,
-        "message": "Your auction has been closed successfully"
+        "message": "your auction has been closed successfully. Congratulations!"
     })
 
 
