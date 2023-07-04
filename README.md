@@ -9,7 +9,7 @@
 
 4. **Run 'python manage.py runserver'**
 
-5. **Click on url for localhost**
+5. **Click on the link to the localhost url**
 
 and...Voila!
 
