@@ -11,5 +11,5 @@
 
 5. **Click on the link to the localhost url**
 
-and...Voila!
+and...Voila! Enjoy your imaginary Zoom call with your favorite influencer!
 
