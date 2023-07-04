@@ -1,6 +1,6 @@
 # Django project in Python for fictitious video call auction service called 'Power Hour'
 
-### How to view project:
+### How to view the project:
 1. **Clone repo**
 
 2. **Run 'pipenv install' in the terminal (under the correct directory)**
