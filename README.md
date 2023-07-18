@@ -1,4 +1,4 @@
-# Django project in Python for fictitious video-call auction service called 'Power Hour'
+# Django project in Python for video-call auction service called 'Power Hour'
 
 ### How to view the project:
 1. **Clone repo**
