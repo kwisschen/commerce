@@ -31,12 +31,12 @@
                     {% if watchlisted %}
                         <form action="{% url 'unwatch' id=listing.id %}" method="POST">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-warning">Unwatch</button>
+                            <button type="submit" class="btn btn-warning">Unfollow</button>
                         </form>
                     {% else %}
                         <form action="{% url 'watch' id=listing.id %}" method="POST">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-success">Watchlist</button>
+                            <button type="submit" class="btn btn-success">Follow</button>
                         </form>
                     {% endif %}
                 </div>
@@ -44,12 +44,12 @@
                 {% if watchlisted %}
                     <form action="{% url 'unwatch' id=listing.id %}" method="POST">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-warning">Unwatch</button>
+                        <button type="submit" class="btn btn-warning">Unfollow</button>
                     </form>
                 {% else %}
                     <form action="{% url 'watch' id=listing.id %}" method="POST">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-success">Watchlist</button>
+                        <button type="submit" class="btn btn-success">Follow</button>
                     </form>
                 {% endif %}
             {% endif %}

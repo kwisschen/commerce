@@ -1,4 +1,4 @@
-/* styles.css */
+/* Old version */
 body {
   padding: 10px;
 }
@@ -99,4 +99,14 @@ body {
 
 .container .bid-form {
   margin-bottom: 20px;
+}
+
+
+/* Footer section */
+
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
 }

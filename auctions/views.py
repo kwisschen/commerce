@@ -18,7 +18,6 @@ def index(request):
     })
 
 
-
 def by_category(request):
     if request.method == "POST":
         selected_category = request.POST["category"] # "name" attr from select tag in index.html

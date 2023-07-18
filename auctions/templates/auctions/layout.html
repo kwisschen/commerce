@@ -2,50 +2,65 @@
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>{% block title %}Auctions{% endblock %}</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
-    </head>
-    <body>
-        <div class="upper-body">
-            <h1>Power Hour Auctions</h1>
-            <h5>Not getting the attention you want from your favorite influencer? No problem!<br></h5>
-            <div class="my-4">
-                {% if user.is_authenticated %}
-                    Signed in as <strong>{{ user.username }}</strong>.
-                {% else %}
-                    Not signed in.
-                {% endif %}
-            </div>
-            <ul class="nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
-                </li>
-                {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'create' %}">Create Listing</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'watchlist' %}">My Watchlist</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
-                    </li>
-                {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">Log In</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'register' %}">Register</a>
-                    </li>
-                {% endif %}
-            </ul>
-        </div>
-        <hr>
-        <div class="main-body">
-            {% block body %}
-            {% endblock %}
-        </div>
-    </body>
+  <head>
+    <title>{% block title %}Auctions{% endblock %}</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lalezar&family=Montserrat:wght@400;700&family=Playfair+Display:ital,wght@0,800;1,400&display=swap" rel="stylesheet">
+    
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link href="{% static 'auctions/styles.css' %}" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="header">
+      <h1>Power Hour Auctions</h1>
+      <h5>
+        Not getting the attention you need from your favorite influencer? No
+        problem!<br />
+      </h5>
+      <div class="my-4">
+        {% if user.is_authenticated %} Signed in as
+        <strong>{{ user.username }}</strong>. 
+        {% else %} Not signed in. 
+        {% endif %}
+      </div>
+      <ul class="nav">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
+        </li>
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'create' %}">Create Listing</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'watchlist' %}">My Watchlist</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'login' %}">Log In</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'register' %}">Register</a>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+    <hr />
+    <div class="main-body">{% block body %} {% endblock %}</div>
+    <hr />
+    <section>
+      <div class="footer container col-xxl-8 py-5">
+        <p>Copyright Christopher Chen</p>
+      </div>
+    </section>
+  </body>
 </html>
