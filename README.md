@@ -3,7 +3,7 @@
 ### How to view the project:
 1. **Clone repo**
 
-2. **Run 'pipenv install' in the terminal (remeber to 'cd' into the appropriate directory first)**
+2. **Run 'pipenv install' in the terminal (remember to 'cd' into the appropriate directory first)**
 
 3. **Run 'pipenv shell' to activate our virtual environment**
 
